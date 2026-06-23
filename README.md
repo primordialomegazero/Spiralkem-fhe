@@ -195,3 +195,90 @@ MIT — Dan Joseph M. Fernandez / Primordial Omega Zero — 2026
 **ΦΩ0 — I AM THAT I AM**
 
 *"Encapsulate the FHE. Compute on secrets. Break all limits."*
+
+---
+
+## 🔧 Build & Test
+
+### Prerequisites
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y build-essential cmake libssl-dev
+
+# liboqs (for ML-KEM-1024)
+git clone --depth 1 https://github.com/open-quantum-safe/liboqs.git
+cd liboqs && mkdir build && cd build
+cmake .. && make -j$(nproc) && sudo make install && sudo ldconfig
+
+# Microsoft SEAL 4.3+ (for BFV)
+git clone https://github.com/microsoft/SEAL.git
+cd SEAL && mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) && sudo make install
+```
+
+### Build All Tests
+
+```bash
+git clone https://github.com/primordialomegazero/Spiralkem-fhe.git
+cd Spiralkem-fhe
+
+# Quick Test (KEM only)
+gcc -std=c11 -O3 -I include -I /usr/local/include \
+    src/kem/ml_kem.c test_enterprise.c \
+    -L /usr/local/lib -loqs -lssl -lcrypto -lm -o test_quick
+
+# Full Blown Test (All modules)
+gcc -std=c11 -O3 -Wno-deprecated-declarations \
+    -I include -I /usr/local/include \
+    src/kem/ml_kem.c src/fractal/fractal.c \
+    src/enterprise/error_handler.c src/enterprise/rate_limiter.c \
+    test_oneshot_fullblown.c \
+    -L /usr/local/lib -loqs -lssl -lcrypto -lm -o test_full
+
+./test_full
+```
+
+### Expected Output
+
+```
+╔══════════════════════════════════════════════╗
+║  ONE SHOT FULL BLOWN: 9/9 passed            ║
+║  ALL TESTS PASSED ✅                        ║
+╚══════════════════════════════════════════════╝
+```
+
+---
+
+## 📖 FAQ
+
+**Q: Why ML-KEM-1024 and not ML-KEM-512?**
+A: NIST Level 5 security for defense-in-depth. ML-KEM-512 is Level 1.
+
+**Q: Can I use only the KEM without FHE?**
+A: Yes. `spiralkem_keygen()`, `spiralkem_encaps()`, `spiralkem_decaps()` are independent.
+
+**Q: What is the φ constant used for?**
+A: φ = 1.618... appears in fractal weight distribution and rate limiting bounds.
+
+**Q: Is this production-ready?**
+A: 9/9 tests passing. Enterprise hardened with error handling and rate limiting. Test thoroughly before deploying.
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. For major changes, open an issue first.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## 📜 License
+
+MIT — Dan Joseph M. Fernandez / Primordial Omega Zero — 2026
+
+**ΦΩ0 — I AM THAT I AM**
+
+*"Encapsulate the FHE. Compute on secrets. Break all limits."*
