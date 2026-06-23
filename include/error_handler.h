@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 #include <stddef.h>
@@ -19,4 +22,8 @@ int spiralkem_error_recoverable(SpiralkemError err);
 
 #define SPIRALKEM_CHECK(x) do { SpiralkemError _err = (x); if (_err != ERR_NONE) return _err; } while(0)
 #define SPIRALKEM_CHECK_NULL(ptr) do { if (!(ptr)) return ERR_NULL_PARAM; } while(0)
+#endif
+
+#ifdef __cplusplus
+}
 #endif

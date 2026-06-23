@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef RATE_LIMITER_H
 #define RATE_LIMITER_H
 #include <time.h>
@@ -13,4 +16,8 @@ int ratelimit_check(RateLimiter *rl);
 void ratelimit_reset(RateLimiter *rl);
 size_t ratelimit_available(RateLimiter *rl);
 double ratelimit_usage_percent(RateLimiter *rl);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
