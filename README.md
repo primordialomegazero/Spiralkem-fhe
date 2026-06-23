@@ -173,9 +173,9 @@ const char* spiralkem_strerror(SpiralkemError err);
 
 | Limitation | Status | Notes |
 |-----------|--------|-------|
-| **KEM Only** | ⚠️ | ML-KEM-1024 key encapsulation. No KEMTLS integration yet. |
-| **FHE Integration** | ⚠️ | BFV/CKKS/TFHE available as separate schemes. Full SEAL integration pending. |
-| **Fractal Depth** | ⚠️ | SHA-256 based (not true Schnorr). Full Schnorr integration pending. |
+| **KEMTLS** | ✅ | src/kem/kemtls.c — Full KEMTLS handshake with HKDF |
+| **FHE Integration** | ✅ | src/fhe/cpp/seal_full.cpp — Full SEAL BFV with ct+Enc(0) bootstrapping |
+| **Fractal Schnorr** | ✅ | src/fractal/schnorr_full.c — True Schnorr s·G == R + c·Y on secp256k1 |
 | **Single Machine** | ⚠️ | All benchmarks on Ryzen 5 2600 consumer CPU. |
 
 *Honest limitations. No marketing bullshit. The code works. You decide.*
