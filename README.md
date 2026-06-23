@@ -26,13 +26,13 @@
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ff69b4', 'primaryTextColor': '#000000', 'primaryBorderColor': '#ff1493', 'lineColor': '#ff69b4', 'tertiaryColor': '#1a1a1a', 'background': '#1a1a1a', 'mainBkg': '#1a1a1a', 'nodeBorder': '#ff69b4', 'clusterBkg': '#1a1a1a', 'clusterBorder': '#ff69b4', 'titleColor': '#ff69b4', 'edgeLabelBackground': '#1a1a1a', 'nodeTextColor': '#000000'}}}%%
 graph TB
     subgraph "Spiralkem-FHE"
-        A[ML-KEM-1024 Keygen] --> B[Encaps → Shared Secret]
-        B --> C[FHE Encrypt(secret)]
-        C --> D[FHE Compute]
-        D --> E[KEM Decaps]
-        E --> F[FHE Decrypt Result]
-        C --> G[Fractal Tree]
-        G --> H[Self-Healing]
+        A["ML-KEM-1024 Keygen"] --> B["Encaps → Shared Secret"]
+        B --> C["FHE Encrypt(secret)"]
+        C --> D["FHE Compute"]
+        D --> E["KEM Decaps"]
+        E --> F["FHE Decrypt Result"]
+        C --> G["Fractal Tree"]
+        G --> H["Self-Healing"]
     end
     
     style A fill:#ff69b4,stroke:#ff1493,color:#000000
@@ -46,11 +46,11 @@ graph TB
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ff69b4', 'primaryTextColor': '#000000', 'primaryBorderColor': '#ff1493', 'lineColor': '#ff69b4', 'tertiaryColor': '#1a1a1a', 'background': '#1a1a1a', 'mainBkg': '#1a1a1a', 'nodeBorder': '#ff69b4', 'clusterBkg': '#1a1a1a', 'clusterBorder': '#ff69b4', 'titleColor': '#ff69b4', 'edgeLabelBackground': '#1a1a1a', 'nodeTextColor': '#000000'}}}%%
 flowchart LR
-    A[🔐 KEM Keygen] --> B[📦 Encaps]
-    B --> C[🔒 FHE Encrypt]
-    C --> D[⚡ FHE Compute]
-    D --> E[🔓 KEM Decaps]
-    E --> F[📄 Result]
+    A["🔐 KEM Keygen"] --> B["📦 Encaps"]
+    B --> C["🔒 FHE Encrypt"]
+    C --> D["⚡ FHE Compute"]
+    D --> E["🔓 KEM Decaps"]
+    E --> F["📄 Result"]
     
     style A fill:#ff69b4,stroke:#ff1493,color:#000000
     style F fill:#ff69b4,stroke:#ff1493,color:#000000
