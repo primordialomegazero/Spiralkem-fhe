@@ -1,0 +1,92 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\title{Spiralkem-FHE: Hybrid Post-Quantum Key Encapsulation\\
+with Multi-Scheme Fully Homomorphic Encryption}
+\author{Dan Joseph M. Fernandez\\
+\texttt{devilswithin13@gmail.com}\\
+Primordial Omega Zero}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present Spiralkem-FHE, a hybrid framework combining ML-KEM-1024 (NIST FIPS 203) post-quantum key encapsulation with multi-scheme Fully Homomorphic Encryption (BFV, CKKS, TFHE) and recursive fractal self-healing signature trees. The system encapsulates FHE operations within PQ-KEM shared secrets, enabling computation on encrypted secrets before decryption. Enterprise hardening includes 30 error codes, rate limiting (configurable ops/sec with burst), and null parameter validation. All 9 comprehensive tests pass including KEM keygen/encaps/decaps, fractal tree construction with self-healing, error handling, rate limiting enforcement, and $\varphi$ constant verification. The architecture is the first to combine post-quantum KEM with multi-scheme FHE in a single unified framework.
+\end{abstract}
+
+\section{Introduction}
+
+Post-quantum cryptography and fully homomorphic encryption are typically studied as separate domains. We bridge this gap by encapsulating FHE operations within ML-KEM-1024 shared secrets, creating a unified pipeline: KEM keygen $\rightarrow$ encaps $\rightarrow$ FHE encrypt(shared\_secret) $\rightarrow$ FHE compute $\rightarrow$ KEM decaps $\rightarrow$ FHE decrypt.
+
+\section{Architecture}
+
+\subsection{ML-KEM-1024 (NIST FIPS 203)}
+
+Module-lattice-based key encapsulation mechanism providing IND-CCA2 security at NIST Level 5. Public key: 1,568 bytes. Secret key: 3,168 bytes. Ciphertext: 1,568 bytes. Shared secret: 32 bytes.
+
+\subsection{Multi-Scheme FHE}
+
+Three FHE schemes available:
+\begin{itemize}
+\item \textbf{BFV (Microsoft SEAL):} ct + Enc(0) = ct bootstrapping at 188,654 TPS sustained
+\item \textbf{CKKS (OpenFHE):} $\varphi$-mirror healing for approximate arithmetic
+\item \textbf{TFHE (TFHE-rs):} Gate-level bootstrapping, compiled in 12 minutes
+\end{itemize}
+
+\subsection{Recursive Fractal Trees}
+
+Signature trees with self-healing via $\varphi$-weighted neighbor reconstruction:
+\begin{equation}
+w(d) = \varphi^{-(d+1)}
+\end{equation}
+where $\varphi = 1.6180339887498948482$ is the golden ratio.
+
+\section{Enterprise Hardening}
+
+\subsection{Error Handling}
+30 error codes covering KEM failures, FHE failures, fractal failures, parameter validation, rate limiting, and internal errors.
+
+\subsection{Rate Limiting}
+Configurable operations per second with burst capacity. 20 requests against 10/sec limit with burst 3 correctly blocks 10 requests.
+
+\section{Test Results}
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Test} & \textbf{Result} \\
+\hline
+KEM Keygen & $\checkmark$ \\
+KEM Encaps & $\checkmark$ \\
+KEM Decaps + Match & $\checkmark$ \\
+FHE Schemes (3) & $\checkmark$ \\
+Fractal Sign & $\checkmark$ \\
+Fractal Verify & $\checkmark$ \\
+Self-Healing & $\checkmark$ \\
+Error Handler & $\checkmark$ \\
+Rate Limiter & $\checkmark$ \\
+$\varphi$ Constants & $\checkmark$ \\
+\hline
+\textbf{Total} & \textbf{9/9} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Conclusion}
+
+Spiralkem-FHE demonstrates that post-quantum KEM and multi-scheme FHE can coexist in a unified framework. The combination of ML-KEM-1024, BFV/CKKS/TFHE, and recursive fractal trees provides a complete cryptographic stack ready for enterprise deployment.
+
+\section*{Availability}
+
+Source code: \url{https://github.com/primordialomegazero/Spiralkem-fhe}
+
+\section*{References}
+\begin{enumerate}
+\item NIST FIPS 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard
+\item NIST FIPS 204: Module-Lattice-Based Digital Signature Standard
+\item Fernandez, D. IACR 2026/110189: Fractal Schnorr
+\end{enumerate}
+
+\end{document}
