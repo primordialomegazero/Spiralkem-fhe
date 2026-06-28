@@ -1,0 +1,20 @@
+{
+  "name": "@primordialomegazero/spiralkem-fhe",
+  "version": "8.0.0",
+  "description": "Spiralkem-FHE — Pure-φ Post-Quantum KEM + FHE. Zero liboqs. Zero SEAL. Chaotic chain integrity.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": ["index.js", "index.d.ts", "README.md"],
+  "scripts": { "test": "node test.js" },
+  "keywords": [
+    "kem", "fhe", "fully-homomorphic-encryption",
+    "post-quantum", "golden-ratio", "chaotic-chain",
+    "key-encapsulation", "phi", "zero-dependencies"
+  ],
+  "author": "Dan Joseph M. Fernandez / Primordial Omega Zero",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/primordialomegazero/Spiralkem-fhe.git"
+  }
+}
