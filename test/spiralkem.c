@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include "src/phi_kem.h"
+#include "../src/phi_kem.h"
 
 int main() {
     printf("╔══════════════════════════════════════════════╗\n");
