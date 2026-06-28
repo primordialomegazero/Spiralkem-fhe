@@ -10,9 +10,8 @@
 #define PHI_KEM_SHAREDSECRETBYTES 32
 
 // Pure-φ Key Encapsulation Mechanism
-// Based on chaotic irreversibility (no liboqs needed)
 int phi_kem_keygen(uint8_t *pk, uint8_t *sk);
 int phi_kem_encaps(uint8_t *ct, uint8_t *ss, const uint8_t *pk);
-int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, const uint8_t *sk);
+int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, size_t ct_len, const uint8_t *sk);
 
 #endif

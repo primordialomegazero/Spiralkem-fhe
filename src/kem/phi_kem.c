@@ -27,7 +27,6 @@ int phi_kem_encaps(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     const double phi = 1.6180339887498948482;
     EVP_MD_CTX *c = EVP_MD_CTX_new();
     
-    // ct[0:32] = ss XOR SHA-256(pk || "encaps" || phi)
     uint8_t mask[32];
     EVP_DigestInit_ex(c, EVP_sha256(), NULL);
     EVP_DigestUpdate(c, pk, PHI_KEM_PUBLICKEYBYTES);
@@ -36,7 +35,6 @@ int phi_kem_encaps(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     EVP_DigestFinal_ex(c, mask, NULL);
     for (int i = 0; i < 32; i++) ct[i] = ss[i] ^ mask[i];
     
-    // ct[32:128] = 7-iteration chaotic chain, seeded by SHA-256(pk || ss)
     uint8_t seed[32];
     EVP_DigestInit_ex(c, EVP_sha256(), NULL);
     EVP_DigestUpdate(c, pk, PHI_KEM_PUBLICKEYBYTES);
@@ -46,7 +44,8 @@ int phi_kem_encaps(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     double x = phi;
     uint8_t prev[32];
     memcpy(prev, seed, 32);
-    for (int i = 0; i < 7; i++) {
+    // 6 iterations × 16 bytes = 96 bytes (fits in 128 - 32 = 96)
+    for (int i = 0; i < 6; i++) {
         x = phi * x * (1.0 - x);
         uint8_t hash[32];
         EVP_DigestInit_ex(c, EVP_sha256(), NULL);
@@ -60,12 +59,13 @@ int phi_kem_encaps(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     return 0;
 }
 
-int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
+int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, size_t ct_len, const uint8_t *sk) {
     if (!ss || !ct || !sk) return -1;
+    if (ct_len < PHI_KEM_CIPHERTEXTBYTES) return -1;
+    
     const double phi = 1.6180339887498948482;
     EVP_MD_CTX *c = EVP_MD_CTX_new();
     
-    // Recompute pk from sk
     uint8_t pk[PHI_KEM_PUBLICKEYBYTES];
     EVP_DigestInit_ex(c, EVP_sha256(), NULL);
     EVP_DigestUpdate(c, &phi, sizeof(phi));
@@ -76,7 +76,6 @@ int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     EVP_DigestUpdate(c, &phi, sizeof(phi));
     EVP_DigestFinal_ex(c, pk + 32, NULL);
     
-    // Decrypt shared secret: ss = ct[0:32] XOR SHA-256(pk || "encaps" || phi)
     uint8_t mask[32];
     EVP_DigestInit_ex(c, EVP_sha256(), NULL);
     EVP_DigestUpdate(c, pk, PHI_KEM_PUBLICKEYBYTES);
@@ -85,7 +84,6 @@ int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     EVP_DigestFinal_ex(c, mask, NULL);
     for (int i = 0; i < 32; i++) ss[i] = ct[i] ^ mask[i];
     
-    // Verify chain: recompute from pk || ss
     uint8_t seed[32];
     EVP_DigestInit_ex(c, EVP_sha256(), NULL);
     EVP_DigestUpdate(c, pk, PHI_KEM_PUBLICKEYBYTES);
@@ -95,7 +93,7 @@ int phi_kem_decaps(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     double x = phi;
     uint8_t prev[32];
     memcpy(prev, seed, 32);
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 6; i++) {
         x = phi * x * (1.0 - x);
         uint8_t hash[32];
         EVP_DigestInit_ex(c, EVP_sha256(), NULL);
